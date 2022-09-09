@@ -1,12 +1,14 @@
 import React from 'react';
-import { Box, FormControl, FormLabel, Input, Button, RadioGroup, Radio, Stack, useToast,FormErrorMessage, Select } from '@chakra-ui/react';
-import { Formik, Field ,ErrorMessage } from "formik";
+import { Box, FormControl, FormLabel, Input, Button,useToast,FormErrorMessage, Select } from '@chakra-ui/react';
+import { Formik, Field  } from "formik";
+import { useNavigate } from 'react-router-dom';
 
 import * as Yup from 'yup';
 
 export const Signup = () => {
    
     const toast = useToast();
+    const navigate = useNavigate();
 
     const handleSignUp = async ({name,age,gender,role,email,password}) => {
         try {
@@ -34,7 +36,7 @@ export const Signup = () => {
                     duration: 4000,
                     isClosable: true,
                 });
-                
+                navigate('../login');
             }
 
         } catch (error) {
@@ -44,31 +46,33 @@ export const Signup = () => {
 
 
     return (
-        <Box width="600px" margin="50px auto">
+        <Box width="600px" margin="50px auto" backgroundColor="#adf7c1" padding="40px" borderRadius="10px">
             <Formik initialValues={{name: "",
         age: 0,
         gender: "male",
         role:"developer",
         email: "",
         password: ""}} onSubmit={(values)=>{handleSignUp(values)}} validationSchema={Yup.object({
-            name:Yup.string().max(15, 'Must be 15 characters or less')
-            .required('Required'),
+            name:Yup.string().required('Required'),
             age:Yup.number().min(1,"Age must be greater than 0").required('Required'),
             email: Yup.string().email().required('Required'),
             password:Yup.string().required('Required'),
         })}>
-            {({handleSubmit,errors,touched})=>(
+            {({handleSubmit,errors,touched})=>{
+
+            return (
+                
                 <form onSubmit={handleSubmit}>
-                <FormControl padding="20px 0px">
+                <FormControl padding="20px 0px" isInvalid={errors.name && touched.name}>
                     <FormLabel>Name</FormLabel>
                     <Field type="text" name="name" placeholder='Enter name' variant="filled" as={Input}/>
-                    <ErrorMessage name="name"/>
+                    
                 </FormControl>
                 <FormControl padding="20px 0px" isInvalid={errors.age && touched.age}>
                     <FormLabel>Age</FormLabel>
                     <Field type="number" name="age" placeholder='Enter age' as={Input} variant="filled" />
-                    {/* <ErrorMessage name="age" /> */}
-                    <FormErrorMessage >{errors.age}</FormErrorMessage>
+                    <FormErrorMessage>{errors.age}</FormErrorMessage>
+                   
                 </FormControl>
                 <FormControl padding="20px 0px">
                     <FormLabel>Gender</FormLabel>
@@ -91,20 +95,21 @@ export const Signup = () => {
                         <option value="team lead">Team Lead</option>
                     </Field>
                 </FormControl>
-                <FormControl padding="20px 0px">
+                <FormControl padding="20px 0px" isInvalid={errors.email && touched.email}>
                     <FormLabel>Email</FormLabel>
                     <Field as={Input} variant="filled" type="text" name="email" placeholder='Enter email' />
                     <FormErrorMessage>{errors.email}</FormErrorMessage>
                 </FormControl>
-                <FormControl padding="20px 0px">
+                <FormControl padding="20px 0px" isInvalid={errors.password && touched.password}>
                     <FormLabel>Password</FormLabel>
-                    <Field as={Input} variant="filled" type="text" name="password" placeholder='Enter password' />
+                    <Field as={Input} variant="filled" type="password" name="password" placeholder='Enter password' />
                     <FormErrorMessage>{errors.password}</FormErrorMessage>
     
                 </FormControl>
                 <Button colorScheme="blue" type="submit">Sign Up</Button>
                 </form>
-            )}
+            
+            )}}
             </Formik>
         </Box>
     )
