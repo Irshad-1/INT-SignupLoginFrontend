@@ -1,5 +1,5 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-# brandAndBeyond Frontend
+# Frontend
 
 ## Web App Deployed Link : `https://int-sign-login.netlify.app/`
 
